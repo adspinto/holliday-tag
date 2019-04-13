@@ -14,7 +14,7 @@ export default class Tag extends React.Component {
         this.shouldRender = this.shouldRender.bind(this)
     }
 
-    async getData() {
+    getData() {
         let getProduct = document.getElementById("listagemProdutos")
         let productUl = getProduct.getElementsByTagName("ul")
         let testes = [...productUl].filter(q => q.dataset.produtosLinha !== undefined)
@@ -25,9 +25,9 @@ export default class Tag extends React.Component {
 
         let test_url = window.location.href
         let url = (api.LOCATION_URL == test_url ? api.TRINTA_READ : dev_api.DEV_TRINTA_READ);
+        let arr_data = []
 
-
-        await fetch(url)
+        fetch(url)
             .then(response => {
                 return response.json()
             })
@@ -45,13 +45,13 @@ export default class Tag extends React.Component {
 
                                 arr.map((ar) => {
                                     let idContainer = ar.querySelector(".listagem-item").classList[1].slice(8)
+                                    arr_data.push(idContainer)
                                     let testContainer = ar.querySelector(".imagem-produto")
                                     let testeDivCreation = document.createElement("img");
                                     testeDivCreation.src = newImage.src
                                     testeDivCreation.classList.add("tag-image")
                                     for (let i = 0; i < data.length; i++) {
                                         if (data[i].prod_trinta_dias === idContainer) {
-
                                             testContainer.appendChild(testeDivCreation)
                                         }
 
@@ -64,7 +64,44 @@ export default class Tag extends React.Component {
                 }
 
             })
+            .then((response) => {
+                let get_url = (api.LOCATION_URL == test_url ? api.GET_PROMO : dev_api.DEV_GET_PROMO);
+                fetch(get_url)
+                    .then(response => response.json())
+                    .then(result => {
+                        let day = 24 * 60 * 60
+                        let date = (new Date().getTime() / 1000) * 10
+                        if (result.length > 0)
+                            date = new Date(result[0].created).getTime() / 1000
+                        let today = new Date().getTime() / 1000
+                        let diferenca = Math.abs(Math.round(date - today))
+                        if (diferenca >= day) {
+                            setTimeout(() => {
+                                console.log(arr_data)
+                                let post_url = (api.LOCATION_URL == test_url ? api.UPDATE_PROMO : dev_api.DEV_UPDATE_PROMO);
+                                let tr_url = (api.LOCATION_URL == test_url ? api.TR_PROMO : dev_api.DEV_TR_PROMO);
+                                fetch(tr_url)
+                                    .then(response => {
+                                        arr_data.map(ar => {
+                                            let objTest = { prod_promo: ar }
+                                            fetch(post_url, {
+                                                method: 'POST',
+                                                body: JSON.stringify(objTest)
+                                            })
+                                                .catch(err => console.log("erro", err))
+
+                                        })
+                                    })
+                                    .catch(err => console.log(err, "erro"))
+
+                            }, 100)
+
+                        }
+                    })
+                    .catch(err => console.log("erro", err))
+            })
             .catch(err => console.log("erro", err))
+
     }
 
     shouldRender() {
