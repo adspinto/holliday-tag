@@ -1,6 +1,8 @@
 import React from 'react'
 import Product from './Product'
 import './tag.css'
+import { api, dev_api } from '../config/config'
+
 export default class Tag extends React.Component {
     constructor() {
         super();
@@ -17,7 +19,11 @@ export default class Tag extends React.Component {
         let testes = [...productUl].filter(q => q.dataset.produtosLinha !== undefined)
         let newImage = new Image(100, 100)
         newImage.src = "https://www.hollidaystore.com.br/hollidaystore/painel/painel/public/images/tag-lancamento-PNG-150x199px-1.png"
-        let url = 'https://www.hollidaystore.com.br/hollidaystore/painel/api/tag/read_api_holliday.php'
+
+        let test_url = window.location.href
+        let url = (api.LOCATION_URL == test_url ? api.TRINTA_READ : dev_api.DEV_TRINTA_READ);
+
+
         await fetch(url)
             .then(response => {
                 return response.json()
@@ -50,7 +56,7 @@ export default class Tag extends React.Component {
 
                                 })
                             })
-                        }, 500)
+                        }, 200)
                     })
                 }
 
