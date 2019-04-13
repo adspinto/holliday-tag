@@ -64,42 +64,6 @@ export default class Tag extends React.Component {
                 }
 
             })
-            .then((response) => {
-                let get_url = (api.LOCATION_URL == test_url ? api.GET_PROMO : dev_api.DEV_GET_PROMO);
-                fetch(get_url)
-                    .then(response => response.json())
-                    .then(result => {
-                        let day = 24 * 60 * 60
-                        let date = (new Date().getTime() / 1000) * 10
-                        if (result.length > 0)
-                            date = new Date(result[0].created).getTime() / 1000
-                        let today = new Date().getTime() / 1000
-                        let diferenca = Math.abs(Math.round(date - today))
-                        if (diferenca >= day) {
-                            setTimeout(() => {
-                                console.log(arr_data)
-                                let post_url = (api.LOCATION_URL == test_url ? api.UPDATE_PROMO : dev_api.DEV_UPDATE_PROMO);
-                                let tr_url = (api.LOCATION_URL == test_url ? api.TR_PROMO : dev_api.DEV_TR_PROMO);
-                                fetch(tr_url)
-                                    .then(response => {
-                                        arr_data.map(ar => {
-                                            let objTest = { prod_promo: ar }
-                                            fetch(post_url, {
-                                                method: 'POST',
-                                                body: JSON.stringify(objTest)
-                                            })
-                                                .catch(err => console.log("erro", err))
-
-                                        })
-                                    })
-                                    .catch(err => console.log(err, "erro"))
-
-                            }, 100)
-
-                        }
-                    })
-                    .catch(err => console.log("erro", err))
-            })
             .catch(err => console.log("erro", err))
 
     }
