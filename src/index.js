@@ -11,5 +11,7 @@ let locationTag = window.location
 if (locationTag.href == "http://localhost:8080/") {
     ReactDOM.render(<App />, document.getElementById("tag-data"));
 } else {
-    ReactDOM.render(<App />, document.getElementById('tag-data'));
+    if (window.innerWidth > 910) {
+        ReactDOM.render(<App />, document.getElementById('tag-data'));
+    }
 }
