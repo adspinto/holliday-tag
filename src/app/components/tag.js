@@ -23,12 +23,10 @@ export default class Tag extends React.Component {
             let testes
             let isHome
             if (getProduct) {
-                console.log(getProduct, "pr")
                 productUl = getProduct.getElementsByTagName("ul")
                 testes = [...productUl].filter(q => q.dataset.produtosLinha !== undefined)
                 isHome = true
             } else {
-                console.log(getProductListagem)
                 productUl = getProductListagem[0].getElementsByTagName("ul")
                 testes = [...productUl]
                 isHome = false
@@ -37,12 +35,13 @@ export default class Tag extends React.Component {
 
 
             let newImage = new Image(100, 100)
-            console.log(testes, "testes")
             // mudar a origem da imagem para a hospedagem da API
             newImage.src = "https://www.hollidaystore.com.br/hollidaystore/painel/painel/public/images/tag-lancamento-PNG-150x199px-1.png"
 
             let test_url = window.location.href
             let url = (api.LOCATION_URL == test_url ? api.TRINTA_READ : dev_api.DEV_TRINTA_READ);
+            let url_promo = (api.LOCATION_URL == test_url ? api.GET_PROMO : dev_api.DEV_GET_PROMO);
+
             let arr_data = []
 
             fetch(url)
@@ -94,6 +93,7 @@ export default class Tag extends React.Component {
 
                 })
                 .catch(err => console.log("erro", err))
+
 
         } catch (err) {
             console.log("erro", err)
